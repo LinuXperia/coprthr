@@ -41,9 +41,9 @@
 #define ECXX_COMPILER " e-g++ "
 #define EOBJCOPY " e-objcopy "
 
-#define ECCFLAGS_OCL " -O3 -g -Wall -c -fmessage-length=0 -ffast-math -ftree-vectorize -funroll-loops -Wunused-variable -ffp-contract=fast -mlong-calls -mfp-mode=truncate -falign-loops=8 -falign-functions=8 -w -fstack-usage -fno-exceptions -U_FORTIFY_SOURCE -fno-stack-protector -I/opt/adapteva/esdk/tools/e-gnu/epiphany-elf/sys-include -fpermissive -D__coprthr_device__ -x c++"
+#define ECCFLAGS_OCL " -Os -g -Wall -c -fmessage-length=0 -ffast-math -ftree-vectorize -funroll-loops -Wunused-variable -ffp-contract=fast -mlong-calls -mfp-mode=truncate -falign-loops=8 -falign-functions=8 -w -fstack-usage -fno-exceptions -U_FORTIFY_SOURCE -fno-stack-protector -I/opt/adapteva/esdk/tools/e-gnu/epiphany-elf/sys-include -fpermissive -D__coprthr_device__ -x c++"
 
-#define ECCFLAGS_KCALL " -O0 -g -Wall -c -fmessage-length=0 -ffast-math -ftree-vectorize -funroll-loops -Wunused-variable -ffp-contract=fast -mlong-calls -mfp-mode=round-nearest -w -fstack-usage -fno-exceptions -U_FORTIFY_SOURCE -fno-stack-protector -I/opt/adapteva/esdk/tools/e-gnu/epiphany-elf/sys-include -fpermissive -D__coprthr_device__ "
+#define ECCFLAGS_KCALL " -Os -g -Wall -c -fmessage-length=0 -ffast-math -ftree-vectorize -funroll-loops -Wunused-variable -ffp-contract=fast -mlong-calls -mfp-mode=round-nearest -w -fstack-usage -fno-exceptions -U_FORTIFY_SOURCE -fno-stack-protector -I/opt/adapteva/esdk/tools/e-gnu/epiphany-elf/sys-include -fpermissive -D__coprthr_device__ "
 
 
 #define ECC_BLOCKED_FLAGS "-D_FORTIFY_SOURCE", "-fexceptions", \
@@ -216,13 +216,13 @@ static void __append_str( char** pstr1, char* str2, char* sep, size_t n )
 
 #define SHELLCMD_KCALL_COMPILE \
 	"cd %s; " \
-	CC_COMPILER " -O0 -fPIC" \
+	CC_COMPILER " -Os -fPIC" \
 	" -D__xcl_kcall__ -DE32_DRAM_ZEROPAGE=%p -I%s " \
 	" --include=sl_engine.h -c _kcall_%s.c "
 
 #define SHELLCMD_KCALL2_COMPILE \
 	"cd %s; " \
-	CC_COMPILER " -O0 -fPIC" \
+	CC_COMPILER " -Os -fPIC" \
 	" -D__xcl_kcall__ -DE32_DRAM_ZEROPAGE=%p -I%s " \
 	" --include=sl_engine.h -c _kcall2_%s.c "
 
