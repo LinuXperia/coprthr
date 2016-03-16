@@ -150,35 +150,6 @@ void __dump_registers()
 	}
 }
 
-// Reset a workgroup
-static int fast_e_reset_group(e_epiphany_t *dev)
-{
-	int RESET0 = 0x0;
-	int RESET1 = 0x1;
-	int CONFIG = 0x01000000;
-	int row, col;
-
-	for (row=0; row<dev->rows; row++)
-		for (col=0; col<dev->cols; col++)
-			e_halt(dev, row, col);
-
-	for (row=0; row<dev->rows; row++)
-		for (col=0; col<dev->cols; col++)
-			e_write(dev, row, col, E_REG_CONFIG, &CONFIG, sizeof(unsigned));
-
-	usleep(1000);
-
-	for (row=0; row<dev->rows; row++) {
-		for (col=0; col<dev->cols; col++)
-		{
-			ee_write_reg(dev, row, col, E_REG_RESETCORE, RESET1);
-			ee_write_reg(dev, row, col, E_REG_RESETCORE, RESET0);
-		}
-	}
-
-	return E_OK;
-}
-
 int e32pth_engine_klaunch_needham( int engid_base, int ne, struct workp* wp,
 	struct cmdcall_arg* argp )
 {
@@ -396,8 +367,7 @@ int e32pth_engine_klaunch_needham( int engid_base, int ne, struct workp* wp,
 //		printcl( CL_CRIT "XXX attempt e_loaad");
 
 		printcl( CL_DEBUG "send reset");
-//		e_reset_system();
-		fast_e_reset_group(&e_epiphany);
+		e_reset_system();
 		e_set_loader_verbosity(0);
 		int err = e_load_group(argp->k.krn->prg1->kbinfile,
 			&e_epiphany,0,0,4,4,0);
