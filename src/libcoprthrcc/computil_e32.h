@@ -367,7 +367,7 @@ static int scan_for_sym_e32(
 
 		if (addr == ~0) break;
 
-		if (!strcmp(name,"_core_local_data")) {
+		if ((!strcmp(name,"_core_local_data")) || (!strcmp(name, "core_local_data"))) {
 			if (!(*p_addr_core_local_data)) *p_addr_core_local_data = addr;
 			else if (*p_addr_core_local_data != addr)
 				printcl( CL_ERR "addr_core_local_data mismatch");
@@ -378,7 +378,7 @@ static int scan_for_sym_e32(
 			char kcall3_name[1024];
 			strncpy(kcall3_name,"__XCL_call_",1024);
 			strncat(kcall3_name,clstrtab+clsymtab[i].e_name,1024);
-			if (name[0]=='_'&&!strcmp(name+1,kcall3_name)) {
+			if ((name[0]=='_'&&!strcmp(name+1,kcall3_name)) || (!strcmp(name, kcall3_name))) {
 				if (!clsymtab[i].e_sym) {
 					clsymtab[i].e_sym = addr;
 					printcl( CL_DEBUG "set sym '%s' 0x%x",
