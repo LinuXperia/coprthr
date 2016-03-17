@@ -246,18 +246,15 @@ static void __append_str( char** pstr1, char* str2, char* sep, size_t n )
 	" -L" INSTALL_LIB_DIR " -lcoprthr_mpi " \
 	" -L/opt/adapteva/esdk/tools/e-gnu/epiphany-elf/lib -le-lib " 
 
-
-#define SHELLCMD_GEN_SREC \
+#define SHELLCMD_GEN_ELF \
 	"cd %s; "  \
-  	ECC_COMPILER " -o e32.0.elf " \
+  	ECC_COMPILER " -o e32.elf " \
 	" e32.o " \
-	" -T " E32PTH_LDF " -lm; " \
-	EOBJCOPY " --srec-forceS3 --output-target srec" \
-	" e32.0.elf e32.0.srec "
+	" -T " E32PTH_LDF " -lm; "
 
 #define SHELLCMD_OBJCOPY_STEP \
 	"cd %s; " \
-	" objcopy -I binary -O elf32-littlearm -B arm e32.srec data_srec_e32.o "
+	" objcopy -I binary -O elf32-littlearm -B arm e32.elf data_elf_e32.o "
 
 #define SHELLCMD_GEN_PROGINFO_OBJ \
 	"cd %s;" \
@@ -271,8 +268,8 @@ static void __append_str( char** pstr1, char* str2, char* sep, size_t n )
 #define SHELLCMD_CXXLINK_LIB \
 	"cd %s; " \
 	CXX_COMPILER CCFLAGS_LINK \
-	" -shared -Wl,-soname,data_srec_e32.so -o data_srec_e32.so" \
-	" data_srec_e32.o %s.elfcl _program_info.o "
+	" -shared -Wl,-soname,data_elf_e32.so -o data_elf_e32.so" \
+	" data_elf_e32.o %s.elfcl _program_info.o "
 
 	
 static char* ecc_block_flags[] = { ECC_BLOCKED_FLAGS };
@@ -476,15 +473,10 @@ int __compile_e32(
 		__check_err( err, "error: e32 prog link failed" );
 
 
-		__asprintf(&cmd,SHELLCMD_GEN_SREC, wd);
+		__asprintf(&cmd,SHELLCMD_GEN_ELF, wd);
 		err = exec_shell(cmd,log);
-		__check_err( err, "create srec failed" );
+		__check_err( err, "create elf failed" );
 
-
-		__asprintf(&cmd,"cd %s; cat e32.0.srec > e32.srec",wd);
-		err = exec_shell(cmd,log);
-		__check_err( err, "create srec failed" );
-			
 
 		/* now extract sym arg data */
 
@@ -504,7 +496,7 @@ int __compile_e32(
 
 		i=0;
 
-		err = scan_for_sym_e32(wd,"e32.0.elf",nsym,clsymtab,clstrtab,
+		err = scan_for_sym_e32(wd,"e32.elf",nsym,clsymtab,clstrtab,
 			&addr_core_local_data,log);
 		__check_err( err, "scan for sym failed");
 
@@ -554,7 +546,7 @@ int __compile_e32(
 
       __asprintf(&cmd,SHELLCMD_OBJCOPY_STEP, wd);
       err = exec_shell(cmd,log);
-      __check_err( err, "e32.srec prog embedding failed" );
+      __check_err( err, "e32.elf prog embedding failed" );
 
 
 		printcl( CL_DEBUG "SHELLCMD_GEN_PROGINFO_OBJ");
@@ -583,7 +575,7 @@ int __compile_e32(
 	
 	strcpy(ofname,wd);
    strcat(ofname,"/");
-   strcat(ofname,"/data_srec_e32.so");
+   strcat(ofname,"/data_elf_e32.so");
 
 	printcl( CL_DEBUG "copy_file_to_mem");
 

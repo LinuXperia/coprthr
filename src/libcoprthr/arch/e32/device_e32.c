@@ -87,7 +87,7 @@ static char* truncate_ws(char* buf)
 
 #include "dmalloc.h"
 
-void* loaded_srec = 0;
+void* loaded_elf = 0;
 int e_opened = 0;
 
 

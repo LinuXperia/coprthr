@@ -74,7 +74,7 @@ struct coord xxx_cores[] = {
 
 unsigned int xxx_ncores = (sizeof(xxx_cores)/sizeof(struct coord));
 
-extern void* loaded_srec;
+extern void* loaded_elf;
 extern int e_opened;
 
 /* 
@@ -357,11 +357,11 @@ int e32pth_engine_klaunch_needham( int engid_base, int ne, struct workp* wp,
 	printcl( CL_DEBUG "BEFORE LOAD");
 
 	if (1) {
-		printcl( CL_DEBUG "need to load srec");
+		printcl( CL_DEBUG "need to load elf");
 		printcl( CL_WARNING "hardcoded to devnum=0");
 
 
-		printcl( CL_DEBUG "will try to load the srec file '%s'",
+		printcl( CL_DEBUG "will try to load the elf file '%s'",
 			argp->k.krn->prg1->kbinfile);
 
 //		printcl( CL_CRIT "XXX attempt e_loaad");
@@ -375,14 +375,14 @@ int e32pth_engine_klaunch_needham( int engid_base, int ne, struct workp* wp,
 //		printcl( CL_CRIT "XXX e_loader returned %d",err);
  
 		if (!err)
-			loaded_srec = argp->k.krn->prg1->kbin;
+			loaded_elf = argp->k.krn->prg1->kbin;
 
 		e_opened = 1;
 	
 
 	} else {
 	
-		printcl( CL_DEBUG "srec file '%s' already loaded",
+		printcl( CL_DEBUG "elf file '%s' already loaded",
 			argp->k.krn->prg1->kbinfile);
 
 		printcl( CL_DEBUG "sending reset and ILAT only");

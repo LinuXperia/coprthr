@@ -299,20 +299,20 @@ unsigned int __do_build_program_from_binary_1(
 		memcpy( prg1->info,proginfo,sizeof(struct program_info_struct));
 	}
 
-	unsigned char* srec = dlsym(h,"_binary_e32_srec_start");
-	unsigned char* srec_end = dlsym(h,"_binary_e32_srec_end");
-	size_t srec_sz = srec_end-srec;
+	unsigned char* elf = dlsym(h,"_binary_e32_elf_start");
+	unsigned char* elf_end = dlsym(h,"_binary_e32_elf_end");
+	size_t elf_sz = elf_end-elf;
 
-	printcl( CL_DEBUG "srec srec_end srec_sz %p %p %ld",srec,srec_end,srec_sz);
+	printcl( CL_DEBUG "elf elf_end elf_sz %p %p %ld",elf,elf_end,elf_sz);
 
 //void* dummy = malloc(16384); printcl( CL_DEBUG "dummy=%p",dummy);
 
-//	char srectmpfile[] = "/tmp/xclXXXXXX";	
-	char* srectmpfile = 0;
-	asprintf(&srectmpfile,"%s/xclXXXXXX",tmpdir);
+//	char elftmpfile[] = "/tmp/xclXXXXXX";	
+	char* elftmpfile = 0;
+	asprintf(&elftmpfile,"%s/xclXXXXXX",tmpdir);
 	{
-	int fd = mkstemp(srectmpfile);
-	write(fd,srec,srec_sz);
+	int fd = mkstemp(elftmpfile);
+	write(fd,elf,elf_sz);
 	close(fd);
 	}
 
@@ -455,8 +455,8 @@ unsigned int __do_build_program_from_binary_1(
 		prg1->dlfile = strdup(tmpfile);
 		printcl( CL_DEBUG "kbin = %p",prg1->dlh);
 
-		prg1->kbin = srec;
-		prg1->kbinfile = strdup(srectmpfile);
+		prg1->kbin = elf;
+		prg1->kbinfile = strdup(elftmpfile);
 
 //void* dummy = malloc(16384);
 
